@@ -1,0 +1,103 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<section id="homepage">
+    <body>
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="date-navigation">
+                        <button class="arrow-btn" id="prev-day">&larr;</button>
+                        <span class="current-date"><%= new Date().toLocaleDateString() %></span>
+                        <button class="arrow-btn" id="next-day">&rarr;</button>
+                    </div>
+                    <div class="form-box4" id="tablebook">
+                        <div class="scrollable-container">
+                            <br>
+                            <% let index = 1; %> 
+                            <% for (let hour = 8; hour <= 17; hour++) { %>
+                                <% let displayHour = hour % 12 || 12; %>
+                                <% let displayNextHour = (hour + 1) % 12 || 12; %>
+                                <h3 class="time-heading"><%= displayHour %><%= hour < 12 ? 'AM' : 'PM' %> - <%= displayNextHour %><%= (hour + 1) < 12 ? 'AM' : 'PM' %></h3>
+                                <table class="center-table">
+                                    <tr class="tablehead">
+                                        <th>Rooms B - E</th>
+                                        <th>Rooms F - J</th>
+                                    </tr>
+                                    <% for (let buttonIndex = 1; buttonIndex <= 4; buttonIndex++) { %>
+                                        <tr>
+                                            <td>
+                                                <div class="reserve-info"><br>Room <%= buttonIndex %></div>
+                                                <!-- Form for rooms B-E -->
+                                                <form action="/tableBook" method="GET">
+                                                    <input type= "hidden" name ="tableid" value="<%= index%>"/>
+                                                    <input type= "hidden" name ="isbooked" value= "<%- bookedinfo[index-1].bookedstatus%>"/>
+                                                    <% if(!bookedinfo[index-1].bookedstatus){ %>
+                                                        <button type="submit">Reserve</button>
+                                                    <% } else{ %>
+                                                        <button type="button" class="reserve-btn" onclick="window.location.href='/reservation'">Cancel</button>
+                                                    <% } %>
+                                                    <% index++ %> 
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <div class="reserve-info"><br>Room <%= buttonIndex + 4 %></div>
+                                                <!-- Form for rooms F-J -->
+                                                <form action="/tableBook" method="GET">
+                                                    <input type= "hidden" name ="tableid" value="<%= index%>"/>
+                                                    <input type= "hidden" name ="isbooked" value= "<%- bookedinfo[index-1].bookedstatus%>"/>
+                                                    <% if(!bookedinfo[index-1].bookedstatus){ %>
+                                                        <button type="submit">Reserve</button>
+                                                    <% } else{ %>
+                                                        <button type="button" class="reserve-btn" onclick="window.location.href='/reservation'">Cancel</button>
+                                                    <% } %>
+                                                    <% index++ %>  
+                                                </form>
+                                            </td> 
+                                        </tr>
+                                    <% } %> <!-- End of buttonIndex loop -->
+                                </table>                                <br>
+                                <br>
+                            <% } %> <!-- End of hour loop -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</section>
+<%- include ('../partials/footer') %>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentDate = new Date();
+        let displayedDate = new Date(currentDate);
+
+        const prevDayButton = document.getElementById("prev-day");
+        const nextDayButton = document.getElementById("next-day");
+        const currentDateElement = document.querySelector(".current-date");
+
+        function updateDisplayedDate() {
+            currentDateElement.textContent = displayedDate.toLocaleDateString();
+        }
+
+        prevDayButton.addEventListener("click", function () {
+            displayedDate.setDate(displayedDate.getDate() - 1);
+            updateDisplayedDate();
+        });
+
+        nextDayButton.addEventListener("click", function () {
+            displayedDate.setDate(displayedDate.getDate() + 1);
+            updateDisplayedDate();
+        });
+    });
+</script>
+<style>
+.reserve-btn {
+    background-color: green;
+}
+
+.reserve-btn:hover {
+    background-color: red;
+}
+</style>
